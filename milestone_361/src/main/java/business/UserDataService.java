@@ -22,17 +22,24 @@ public class UserDataService {
 	@GET
 	@Path("/getuserj/{username}")
 	@Produces(MediaType.APPLICATION_JSON) 
-	public ResponseDataModel getAlbum(@PathParam("username") String username) {
+	public ResponseDataModel getuserj(@PathParam("username") String username) {
 		
 		DatabaseAccess da = new DatabaseAccess();
 		User temp = da.getUserByName(username);
 		ResponseDataModel rdm = new ResponseDataModel(0, "", temp);
-		
-		
-//		MusicManager mm = new MusicManager();		
-//		Album temp = service.getAlbum(new Album(title, artist, year));
-//		ResponseDataModel rdm = new ResponseDataModel(0, "", temp);
 		return rdm;
 	}
+	
+	@GET
+	@Path("/getuserx/{username}")
+	@Produces(MediaType.APPLICATION_XML) 
+	public ResponseDataModel getuserx(@PathParam("username") String username) {
+		
+		DatabaseAccess da = new DatabaseAccess();
+		User temp = da.getUserByName(username);
+		ResponseDataModel rdm = new ResponseDataModel(0, "", temp);
+		return rdm;
+	}
+
 
 }
