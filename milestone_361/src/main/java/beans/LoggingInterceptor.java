@@ -2,9 +2,11 @@ package beans;
 
 import java.io.Serializable;
 
+import javax.ejb.Singleton;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
+@Singleton
 public class LoggingInterceptor implements Serializable {
 	
 	
