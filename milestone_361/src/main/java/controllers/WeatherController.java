@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.Random;
 
 import javax.ejb.EJB;
@@ -13,6 +14,8 @@ import javax.interceptor.Interceptors;
 import beans.LoggingInterceptor;
 import beans.User;
 import beans.Weather;
+import business.WeatherInterface;
+import business.WeatherManager;
 import database.DatabaseAccess;
 
 @Named
@@ -20,13 +23,16 @@ import database.DatabaseAccess;
 @Interceptors(LoggingInterceptor.class) 
 public class WeatherController implements Serializable {
 	
+	
+	
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	DatabaseAccess db;
-	Weather weather;
+	WeatherManager wi;
+
 
 	public String login(User user) {
 		db = new DatabaseAccess();
@@ -63,29 +69,29 @@ public class WeatherController implements Serializable {
 	}
 	
 	public String generateWeather() {
-		Random rand = new Random();
-		int temp;
-		weather = new Weather();
-		String[] cities = {"Phoenix", "Los Angeles", "Austin"};
-		
-		int index = rand.nextInt(2);
-		boolean cloudy = false;
-		weather.setCity(cities[index]);
-		
-		if (weather.getCity().equalsIgnoreCase("austin")) {
-			temp = (int)Math.floor(Math.random()*(110-40+1)+40);
-			weather.setCloudy(true);
-			weather.setTemp(temp);
-		} else if (weather.getCity().equalsIgnoreCase("phoenix")){
-			weather.setCloudy(cloudy);
-			temp = (int)Math.floor(Math.random()*(120-50+1)+50);
-			weather.setTemp(temp);
-		} else if (weather.getCity().equalsIgnoreCase("los angeles")) {
-			weather.setCloudy(cloudy);
-			temp = (int)Math.floor(Math.random()*(85-60+1)+60);
-			weather.setTemp(temp);
-		}
+		wi = new WeatherManager();
+		Weather weather = wi.generateWeather();
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("weather", weather);
 		return "WeatherReport.xhtml";
+	}
+	
+	public String logout() {
+		
+		// invalidate session - logout user
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "Login.xhtml";				
+	}
+	
+	public String getUserName() {
+		// Get the logged in Principle
+		Principal principle= FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
+		if(principle == null)
+		{
+			return "";
+		}
+		else
+		{
+			return principle.getName();
+		}
 	}
 }
