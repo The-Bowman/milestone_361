@@ -52,12 +52,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return status;
 	}
 
-	public boolean usernameExists(String username) {
+	public boolean usernameExists(String name) {
 		boolean status = false;
 		try {
 			conn = DriverManager.getConnection(dbURL, username, pword);
 			stmt = conn.prepareStatement("SELECT * FROM user WHERE username = ?");
-			stmt.setString(1, username);
+			stmt.setString(1, name);
 			rs = stmt.executeQuery();
 			status = rs.next();
 		} catch (SQLException e) {
@@ -110,12 +110,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return result;
 	}
 
-	public User getUserByName(String username) {
-		if (usernameExists(username)) {
+	public User getUserByName(String name) {
+		if (usernameExists(name)) {
 			try {
 				conn = DriverManager.getConnection(dbURL, username, pword);
 				stmt = conn.prepareStatement("SELECT * FROM user WHERE username = ?");
-				stmt.setString(1, username);
+				stmt.setString(1, name);
 				rs = stmt.executeQuery();
 				rs.next();
 				User temp = new User();

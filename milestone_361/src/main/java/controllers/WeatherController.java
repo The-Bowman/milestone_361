@@ -94,4 +94,6 @@ public class WeatherController implements Serializable {
 			return principle.getName();
 		}
 	}
+	
+	
 }
