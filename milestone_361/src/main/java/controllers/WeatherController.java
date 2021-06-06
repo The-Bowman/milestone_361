@@ -64,17 +64,26 @@ public class WeatherController implements Serializable {
 	
 	public String generateWeather() {
 		Random rand = new Random();
+		int temp;
 		weather = new Weather();
 		String[] cities = {"Phoenix", "Los Angeles", "Austin"};
-		int temp = rand.nextInt((100 - 0) + 1);
-		int index = rand.nextInt((2 - 0) + 1);
+		
+		int index = rand.nextInt(2);
 		boolean cloudy = false;
 		weather.setCity(cities[index]);
-		weather.setTemp(temp);
+		
 		if (weather.getCity().equalsIgnoreCase("austin")) {
+			temp = (int)Math.floor(Math.random()*(110-40+1)+40);
 			weather.setCloudy(true);
-		} else {
+			weather.setTemp(temp);
+		} else if (weather.getCity().equalsIgnoreCase("phoenix")){
 			weather.setCloudy(cloudy);
+			temp = (int)Math.floor(Math.random()*(120-50+1)+50);
+			weather.setTemp(temp);
+		} else if (weather.getCity().equalsIgnoreCase("los angeles")) {
+			weather.setCloudy(cloudy);
+			temp = (int)Math.floor(Math.random()*(85-60+1)+60);
+			weather.setTemp(temp);
 		}
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("weather", weather);
 		return "WeatherReport.xhtml";
