@@ -14,7 +14,6 @@ import javax.interceptor.Interceptors;
 import beans.LoggingInterceptor;
 import beans.User;
 
-
 @Stateless
 @Local(DatabaseAccessInterface.class)
 @LocalBean
@@ -25,9 +24,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	 * Default constructor
 	 */
 	public DatabaseAccess() {
-		
+
 	}
-	
+
 	// SQL Connection Properties
 	private Connection conn = null;
 	private PreparedStatement stmt = null;
@@ -45,6 +44,20 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			stmt = conn.prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
 			stmt.setString(1, user.getUsername());
 			stmt.setString(2, user.getPassword());
+			rs = stmt.executeQuery();
+			status = rs.next();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		return status;
+	}
+
+	public boolean usernameExists(String username) {
+		boolean status = false;
+		try {
+			conn = DriverManager.getConnection(dbURL, username, pword);
+			stmt = conn.prepareStatement("SELECT * FROM user WHERE username = ?");
+			stmt.setString(1, username);
 			rs = stmt.executeQuery();
 			status = rs.next();
 		} catch (SQLException e) {
@@ -95,6 +108,29 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	public User getUserByName(String username) {
+		if (usernameExists(username)) {
+			try {
+				conn = DriverManager.getConnection(dbURL, username, pword);
+				stmt = conn.prepareStatement("SELECT * FROM user WHERE username = ?");
+				stmt.setString(1, username);
+				rs = stmt.executeQuery();
+				rs.next();
+				User temp = new User();
+				temp.setFirstName((String) rs.getObject("first_name"));
+				temp.setLastName((String) rs.getObject("last_name"));
+				temp.setUsername((String) rs.getObject("username"));
+				temp.setEmail((String) rs.getObject("email"));
+				temp.setPassword((String) rs.getObject("password"));
+				return temp;
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+
+		}
+		return null;
 	}
 
 }

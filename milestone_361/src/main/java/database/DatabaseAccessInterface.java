@@ -27,4 +27,6 @@ public interface DatabaseAccessInterface {
 	 */
 	public int registerUser(User user);
 	
+	public User getUserByName(String username);
+	
 }
